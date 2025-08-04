@@ -29,12 +29,23 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
     std::fs::rename(&old_name, &new_name).map_err(|_| MvError)
 }
 
+#[verifier::external_body]
+fn test(filename: String, fs: &HashMap<String, Vec<u8>>) -> (result: bool)
+    ensures
+        result == get_file(fs, filename).is_some()
+{
+    std::path::Path::new(&filename).exists()
+}
 
 fn main() {
     let mut fs = std::collections::HashMap::new();
     fs.insert("foo".to_string(), vec![1,2]);
+    let f = "foo".to_string();
     
-    mv("foo".to_string(), "bar".to_string(), &mut fs);
+    if test(f.clone(), &fs) {
+        assert(get_file(&fs, f).is_some());
+        mv(f.clone(), "bar".to_string(), &mut fs);
+    }
 }
 
 } // verus!
