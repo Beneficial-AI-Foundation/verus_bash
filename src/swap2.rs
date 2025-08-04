@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use crate::lib::*;
 use crate::swap_spec::*;
+use std::collections::HashMap;
 use vstd::prelude::*;
 
 verus! {
@@ -19,7 +19,7 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     if ! (file1_exists && file2_exists) {
         return Err(SwapError::BadArgs)
     }
-    
+
     match cp(file1, "tmp_file", fs) {
         Ok(()) => {},
         Err(e) => return Err(From::from(e)),

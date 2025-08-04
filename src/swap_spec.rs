@@ -1,6 +1,6 @@
+use crate::lib::*;
 use std::collections::HashMap;
 use vstd::prelude::*;
-use crate::lib::*;
 
 verus! {
 
@@ -19,10 +19,10 @@ impl From<OperationFailed> for SwapError {
 }
 
 pub open spec fn swap_is_correct(
-    file1: &str, 
-    file2: &str, 
-    old_fs: &HashMap<String, Vec<u8>>, 
-    fs: &HashMap<String, Vec<u8>>, 
+    file1: &str,
+    file2: &str,
+    old_fs: &HashMap<String, Vec<u8>>,
+    fs: &HashMap<String, Vec<u8>>,
     result: Result<(), SwapError>
 ) -> bool {
     match result {

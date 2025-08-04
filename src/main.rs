@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use clap::Parser;
+use std::collections::HashMap;
 
 mod lib;
 mod swap1;

@@ -1,14 +1,14 @@
-use std::collections::HashMap;
 use crate::lib::*;
 use crate::swap_spec::*;
+use std::collections::HashMap;
 use vstd::prelude::*;
 
 verus! {
 
 
 pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), SwapError>)
-    ensures
-        swap_is_correct(file1, file2, &old(fs), fs, result)
+     ensures
+         swap_is_correct(file1, file2, &old(fs), fs, result)
 {
     if str_equal(file1, file2) || str_equal(file1, "tmp_file") || str_equal(file2, "tmp_file") {
         return Err(SwapError::BadArgs);
