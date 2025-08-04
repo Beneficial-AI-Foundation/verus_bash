@@ -9,7 +9,7 @@ pub struct MvFailed;
 
 pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: &str) -> Option<Vec<u8>>;
 
-pub open spec fn fs_unchanged_except(old_fs: &HashMap<String, Vec<u8>>, new_fs: &HashMap<String, Vec<u8>>, changed_files: Seq<&str>) -> bool {
+pub open spec fn unchanged_except(old_fs: &HashMap<String, Vec<u8>>, new_fs: &HashMap<String, Vec<u8>>, changed_files: Seq<&str>) -> bool {
     forall|k: &str| 
         (get_file(new_fs, k) != get_file(old_fs, k)) ==> 
         changed_files.contains(k)
