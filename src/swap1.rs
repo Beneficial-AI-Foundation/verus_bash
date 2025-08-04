@@ -8,6 +8,7 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     requires
         file1 != file2,
         file2 != "tmp_file",
+        file1 != "tmp_file",
     ensures
         match result {
             Ok(()) => {
