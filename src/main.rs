@@ -6,11 +6,11 @@ verus! {
 #[derive(PartialEq, Eq)]
 pub struct MvError;
 
-pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: String) -> Option<Vec<u8>>;
+pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: &str) -> Option<Vec<u8>>;
 // Unimplemented - left as specification function
 
 #[verifier::external_body]
-fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvError>)
+fn mv(old_name: &str, new_name: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvError>)
     requires get_file(&old(fs), old_name).is_some()
     ensures
         match result {
@@ -30,7 +30,7 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
 }
 
 #[verifier::external_body]
-fn test(filename: String, fs: &HashMap<String, Vec<u8>>) -> (result: bool)
+fn test(filename: &str, fs: &HashMap<String, Vec<u8>>) -> (result: bool)
     ensures
         result == get_file(fs, filename).is_some()
 {
@@ -42,9 +42,9 @@ fn main() {
     fs.insert("foo".to_string(), vec![1,2]);
     let f = "foo".to_string();
     
-    if test(f.clone(), &fs) {
+    if test(&f, &fs) {
         assert(get_file(&fs, f).is_some());
-        mv(f.clone(), "bar".to_string(), &mut fs);
+        mv(&f.clone(), "bar", &mut fs);
     }
 }
 
