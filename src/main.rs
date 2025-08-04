@@ -1,7 +1,6 @@
+use crate::lib::FileSystem;
 use clap::Parser;
 use std::collections::HashMap;
-
-use crate::lib::FileSystem;
 mod lib;
 mod swap1;
 mod swap2;
@@ -17,7 +16,9 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let mut fs = FileSystem{contents: HashMap::new()};
+    let mut fs = FileSystem {
+        contents: HashMap::new(),
+    };
 
     match swap1::swap(&args.file1, &args.file2, &mut fs) {
         Ok(()) => println!("Swap completed successfully"),

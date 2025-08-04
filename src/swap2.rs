@@ -1,6 +1,5 @@
 use crate::lib::*;
 use crate::swap_spec::*;
-use std::collections::HashMap;
 use vstd::prelude::*;
 
 verus! {

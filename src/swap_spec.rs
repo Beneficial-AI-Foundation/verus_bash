@@ -1,5 +1,4 @@
 use crate::lib::*;
-use std::collections::HashMap;
 use vstd::prelude::*;
 
 verus! {
