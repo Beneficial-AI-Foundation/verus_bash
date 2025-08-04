@@ -29,16 +29,12 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
     std::fs::rename(&old_name, &new_name).map_err(|_| MvError)
 }
 
-} // verus!
 
 fn main() {
     let mut fs = std::collections::HashMap::new();
-    fs.insert("foo".to_string(), b"test content".to_vec());
+    fs.insert("foo".to_string(), vec![1,2]);
     
-    match mv("foo".to_string(), "bar".to_string(), &mut fs) {
-        Ok(()) => println!("File moved successfully"),
-        Err(MvError) => println!("Error"),
-    }
-    
-    println!("Hello, world!");
+    mv("foo".to_string(), "bar".to_string(), &mut fs);
 }
+
+} // verus!
