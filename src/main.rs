@@ -27,6 +27,7 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
             }
         }
 {
+    assume(false);
     // First check if old file exists in our model
     if !fs.contains_key(&old_name) {
         return Err(std::io::Error::new(
