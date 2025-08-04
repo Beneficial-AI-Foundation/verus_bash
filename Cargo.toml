@@ -7,3 +7,6 @@ edition = "2024"
 vstd = { git = "https://github.com/verus-lang/verus", rev = "2496084"}
 verus_builtin = { git = "https://github.com/verus-lang/verus", rev = "2496084"}
 verus_builtin_macros = { git = "https://github.com/verus-lang/verus", rev = "2496084"}
+
+[package.metadata.verus]
+verify = true
