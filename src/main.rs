@@ -1,14 +1,10 @@
 use std::collections::HashMap;
 use vstd::prelude::*;
-use vstd::std_specs::hash::HashMapAdditionalSpecFns;
 
 verus! {
 
 #[derive(PartialEq, Eq)]
-pub enum MvError {
-    NotFound,
-    Other,
-}
+pub struct MvError;
 
 pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: String) -> Option<Vec<u8>>;
 // Unimplemented - left as specification function
@@ -32,12 +28,6 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
             }
         }
 {
-    assume(false);
-    // First check if old file exists in our model
-    if !fs.contains_key(&old_name) {
-        return Err(MvError::NotFound);
-    }
-
     // Perform the actual filesystem operation
     match std::fs::rename(&old_name, &new_name) {
         Ok(()) => {
@@ -48,7 +38,7 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
         },
         Err(_) => {
             // Filesystem operation failed, model remains unchanged
-            Err(MvError::Other)
+            Err(MvError)
         }
     }
 }
@@ -61,8 +51,7 @@ fn main() {
     
     match mv("foo".to_string(), "bar".to_string(), &mut fs) {
         Ok(()) => println!("File moved successfully"),
-        Err(MvError::NotFound) => println!("Error: File not found"),
-        Err(MvError::Other) => println!("Error: Other filesystem error"),
+        Err(MvError) => println!("Error"),
     }
     
     println!("Hello, world!");
