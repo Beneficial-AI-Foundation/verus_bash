@@ -15,10 +15,15 @@ pub fn mv(old_name: &str, new_name: &str, fs: &mut HashMap<String, Vec<u8>>) -> 
     ensures
         match result {
             Ok(()) => {
+                if old_name == new_name {
+                    // Moving to same location is a no-op
+                    *fs == old(fs)
+                } else {
                     get_file(fs, new_name) == get_file(&old(fs), old_name) &&
                     get_file(fs, old_name).is_none() &&
                     forall|k: &str| k != old_name && k != new_name ==>
                         get_file(fs, k) == get_file(&old(fs), k)
+                }
             },
             Err(MvError) => {
                 *fs == old(fs)
