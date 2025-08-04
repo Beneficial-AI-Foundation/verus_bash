@@ -30,8 +30,6 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
     match std::fs::rename(&old_name, &new_name) {
         Ok(()) => {
             // Update our model to reflect the successful move
-            let file_contents = fs.remove(&old_name).unwrap();
-            fs.insert(new_name, file_contents);
             Ok(())
         },
         Err(_) => {
