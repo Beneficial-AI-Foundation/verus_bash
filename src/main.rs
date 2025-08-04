@@ -17,7 +17,7 @@ fn mv(old_name: &str, new_name: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
             Ok(()) => {
                     get_file(fs, new_name) == get_file(&old(fs), old_name) &&
                     get_file(fs, old_name).is_none() &&
-                    forall|k: String| k != old_name && k != new_name ==> 
+                    forall|k: &str| k != old_name && k != new_name ==>
                         get_file(fs, k) == get_file(&old(fs), k)
             },
             Err(MvError) => {
@@ -34,16 +34,15 @@ fn test(filename: &str, fs: &HashMap<String, Vec<u8>>) -> (result: bool)
     ensures
         result == get_file(fs, filename).is_some()
 {
-    std::path::Path::new(&filename).exists()
+    std::path::Path::new(filename).exists()
 }
 
 fn main() {
     let mut fs = std::collections::HashMap::new();
-    let f = "foo".to_string();
     
-    if test(&f, &fs) {
-        assert(get_file(&fs, f).is_some());
-        mv(&f, "bar", &mut fs);
+    if test("foo", &fs) {
+        assert(get_file(&fs, "foo").is_some());
+        mv("foo", "bar", &mut fs);
     }
 }
 
