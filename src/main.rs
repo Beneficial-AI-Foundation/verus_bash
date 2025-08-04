@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 use vstd::prelude::*;
+use vstd::std_specs::hash::HashMapAdditionalSpecFns;
 
 verus! {
 
-fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> Result<(), std::io::Error>
+fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), std::io::Error>)
     requires
         !old_name.contains('/') && !old_name.contains('\\'),
         !new_name.contains('/') && !new_name.contains('\\'),
@@ -52,5 +53,13 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
 } // verus!
 
 fn main() {
+    let mut fs = std::collections::HashMap::new();
+    fs.insert("foo".to_string(), b"test content".to_vec());
+    
+    match mv("foo".to_string(), "bar".to_string(), &mut fs) {
+        Ok(()) => println!("File moved successfully"),
+        Err(e) => println!("Error moving file: {}", e),
+    }
+    
     println!("Hello, world!");
 }
