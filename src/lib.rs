@@ -35,8 +35,7 @@ pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Resul
                 } else {
                     get_file(fs, new_name) == get_file(&old(fs), old_name) &&
                     get_file(fs, old_name).is_none() &&
-                    forall|k: &str| k != old_name && k != new_name ==>
-                        get_file(fs, k) == get_file(&old(fs), k)
+                    unchanged_except(&old(fs), fs, seq![old_name, new_name])
                 }
             },
             Err(OperationFailed) => {
@@ -50,14 +49,13 @@ pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Resul
 #[verifier::external_body]
 pub fn cp(src: &str, dst: &str, fs: &mut FileSystem) -> (result: Result<(), OperationFailed>)
     requires get_file(&old(fs), src).is_some(),
-             !str_equal(src, dst)
+             src != dst
     ensures
         match result {
             Ok(()) => {
                 get_file(fs, dst) == get_file(&old(fs), src) &&
                 get_file(fs, src) == get_file(&old(fs), src) &&
-                forall|k: &str| k != dst ==>
-                    get_file(fs, k) == get_file(&old(fs), k)
+                unchanged_except(&old(fs), fs, seq![dst])
             },
             Err(OperationFailed) => {
                 *fs == old(fs)
@@ -74,8 +72,7 @@ pub fn rm(filename: &str, fs: &mut FileSystem) -> (result: Result<(), OperationF
         match result {
             Ok(()) => {
                 get_file(fs, filename).is_none() &&
-                forall|k: &str| k != filename ==>
-                    get_file(fs, k) == get_file(&old(fs), k)
+                unchanged_except(&old(fs), fs, seq![filename])
             },
             Err(OperationFailed) => {
                 *fs == old(fs)
