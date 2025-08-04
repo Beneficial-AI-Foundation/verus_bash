@@ -43,22 +43,19 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
     let file1_exists = test(file1, fs);
     let file2_exists = test(file2, fs);
 
-    if file1_exists && file2_exists {
-        // Both files exist - swap them using a temporary name
-        mv(file1, "tmp_file", fs).map_err(|x| SwapError::MvFailed)?;
-        match mv(file2, file1, fs) {
-            Ok(()) => {},
-            Err(MvFailed) => return Err(SwapError::MvFailed),
-        }
-        match mv("tmp_file", file2, fs) {
-            Ok(()) => {},
-            Err(MvFailed) => return Err(SwapError::MvFailed),
-        }
-        return Ok(());
+    if ! (file1_exists && file2_exists) {
+        return Err(SwapError::BadArgs)
     }
-    else {
-        return Err(SwapError::BadArgs);
+    mv(file1, "tmp_file", fs).map_err(|x| SwapError::MvFailed)?;
+    match mv(file2, file1, fs) {
+        Ok(()) => {},
+        Err(MvFailed) => return Err(SwapError::MvFailed),
     }
+    match mv("tmp_file", file2, fs) {
+        Ok(()) => {},
+        Err(MvFailed) => return Err(SwapError::MvFailed),
+    }
+    Ok(())
 }
 
 }
