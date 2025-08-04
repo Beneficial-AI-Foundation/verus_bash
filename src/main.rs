@@ -10,9 +10,7 @@ mod swap_spec;
 #[command(name = "verus_bash")]
 #[command(about = "A file swapping utility")]
 struct Args {
-    /// First filename
     file1: String,
-    /// Second filename  
     file2: String,
 }
 
