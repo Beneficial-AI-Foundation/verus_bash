@@ -23,11 +23,11 @@ fn main() {
     match swap1::swap(&args.file1, &args.file2, &mut fs) {
         Ok(()) => println!("Swap completed successfully"),
         Err(swap_spec::SwapError::BadArgs) => {
-            eprintln!("Error: Invalid arguments. Files cannot be the same or named 'tmp_file'");
+            eprintln!("Error: Invalid arguments.");
             std::process::exit(1);
         }
         Err(swap_spec::SwapError::OperationFailed) => {
-            eprintln!("Error: Operation failed");
+            eprintln!("Error: Some operation failed");
             std::process::exit(1);
         }
     }
