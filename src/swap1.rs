@@ -4,7 +4,7 @@ use crate::lib::*;
 
 verus! {
 
-pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvError>)
+pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvFailed>)
     requires
         file1 != file2,
         file2 != "tmp_file",
@@ -24,7 +24,7 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
                     *fs == old(fs)
                 )
             },
-            Err(MvError) => {
+            Err(MvFailed) => {
                     forall|k: &str| k != file1 && k != file2 && k != "tmp_file" ==>
                         get_file(fs, k) == get_file(&old(fs), k)
             }
