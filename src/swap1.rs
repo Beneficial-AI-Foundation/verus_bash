@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use vstd::prelude::*;
 use crate::lib::*;
 
@@ -18,7 +17,7 @@ pub enum SwapError {
     MvFailed,
 }
 
-pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), SwapError>)
+pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<(), SwapError>)
     ensures
         match result {
             Ok(()) => {

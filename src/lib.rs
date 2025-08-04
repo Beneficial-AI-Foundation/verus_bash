@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use vstd::prelude::*;
 
 verus! {
@@ -7,16 +6,18 @@ verus! {
 #[derive(Debug)]
 pub struct MvFailed;
 
-pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: &str) -> Option<Vec<u8>>;
+pub struct FileSystem;
 
-pub open spec fn unchanged_except(old_fs: &HashMap<String, Vec<u8>>, new_fs: &HashMap<String, Vec<u8>>, changed_files: Seq<&str>) -> bool {
+pub uninterp spec fn get_file(fs: &FileSystem, filename: &str) -> Option<Vec<u8>>;
+
+pub open spec fn unchanged_except(old_fs: &FileSystem, new_fs: &FileSystem, changed_files: Seq<&str>) -> bool {
     forall|k: &str| 
         (get_file(new_fs, k) != get_file(old_fs, k)) ==> 
         changed_files.contains(k)
 }
 
 #[verifier::external_body]
-pub fn mv(old_name: &str, new_name: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvFailed>)
+pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Result<(), MvFailed>)
     requires get_file(&old(fs), old_name).is_some()
     ensures
         match result {
@@ -40,7 +41,7 @@ pub fn mv(old_name: &str, new_name: &str, fs: &mut HashMap<String, Vec<u8>>) -> 
 }
 
 #[verifier::external_body]
-pub fn test(filename: &str, fs: &HashMap<String, Vec<u8>>) -> (result: bool)
+pub fn test(filename: &str, fs: &FileSystem) -> (result: bool)
     ensures
         result == get_file(fs, filename).is_some()
 {
