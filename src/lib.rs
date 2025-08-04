@@ -49,7 +49,8 @@ pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Resul
 
 #[verifier::external_body]
 pub fn cp(src: &str, dst: &str, fs: &mut FileSystem) -> (result: Result<(), OperationFailed>)
-    requires get_file(&old(fs), src).is_some()
+    requires get_file(&old(fs), src).is_some(),
+             !str_equal(src, dst)
     ensures
         match result {
             Ok(()) => {
