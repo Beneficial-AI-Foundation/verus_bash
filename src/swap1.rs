@@ -6,7 +6,7 @@ use vstd::prelude::*;
 verus! {
 
 
-pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), SwapError>)
+pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<(), SwapError>)
      ensures
          swap_is_correct(file1, file2, &old(fs), fs, result)
 {

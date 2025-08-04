@@ -21,8 +21,8 @@ impl From<OperationFailed> for SwapError {
 pub open spec fn swap_is_correct(
     file1: &str,
     file2: &str,
-    old_fs: &HashMap<String, Vec<u8>>,
-    fs: &HashMap<String, Vec<u8>>,
+    old_fs: &FileSystem,
+    fs: &FileSystem,
     result: Result<(), SwapError>
 ) -> bool {
     match result {
