@@ -1,17 +1,22 @@
 use std::collections::HashMap;
-use vstd::prelude::*;
+use clap::Parser;
 
 mod lib;
-use lib::*;
+mod swap1;
 
-verus! {
-
-fn main() {
-    let mut fs = HashMap::new();
-    
-    if test("foo", &fs) {
-        mv("foo", "bar", &mut fs);
-    }
+#[derive(Parser)]
+#[command(name = "verus_bash")]
+#[command(about = "A file swapping utility")]
+struct Args {
+    /// First filename
+    file1: String,
+    /// Second filename  
+    file2: String,
 }
 
-} // verus!
+fn main() {
+    let args = Args::parse();
+    let mut fs = HashMap::new();
+    
+    swap1::swap(&args.file1, &args.file2, &mut fs);
+}
