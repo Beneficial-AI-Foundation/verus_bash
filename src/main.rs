@@ -20,7 +20,7 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
                     forall|k: String| k != old_name && k != new_name ==> 
                         get_file(fs, k) == get_file(&old(fs), k)
             },
-            Err(_) => {
+            Err(MvError) => {
                 // On error, filesystem model remains unchanged
                 *fs == old(fs)
             }
