@@ -2,6 +2,7 @@ use clap::Parser;
 
 mod lib;
 mod swap1;
+mod swap_spec;
 use lib::FileSystem;
 
 #[derive(Parser)]

@@ -1,4 +1,5 @@
 use crate::lib::*;
+use crate::swap_spec::*;
 use vstd::prelude::*;
 
 verus! {
@@ -19,21 +20,7 @@ pub enum SwapError {
 
 pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<(), SwapError>)
     ensures
-        match result {
-            Ok(()) => {
-                (
-                    get_file(fs, file1) == get_file(&old(fs), file2) &&
-                    get_file(fs, file2) == get_file(&old(fs), file1) &&
-                    unchanged_except(&old(fs), fs, seq![file1, file2, "tmp_file"])
-                )
-            },
-            Err(SwapError::BadArgs) => {
-                *fs == old(fs)
-            },
-            Err(SwapError::MvFailed) => {
-                    unchanged_except(&old(fs), fs, seq![file1, file2, "tmp_file"])
-            }
-        }
+        swap_is_correct(file1, file2, &old(fs), fs, result)
 {
     if str_equal(file1, file2) || str_equal(file1, "tmp_file") || str_equal(file2, "tmp_file") {
         return Err(SwapError::BadArgs);
