@@ -17,6 +17,13 @@ pub open spec fn unchanged_except(old_fs: &FileSystem, new_fs: &FileSystem, chan
 }
 
 #[verifier::external_body]
+pub fn str_equal(s1: &str, s2: &str) -> (result: bool)
+    ensures result == (s1 == s2)
+{
+    s1 == s2
+}
+
+#[verifier::external_body]
 pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Result<(), MvFailed>)
     requires get_file(&old(fs), old_name).is_some()
     ensures

@@ -4,19 +4,6 @@ use vstd::prelude::*;
 
 verus! {
 
-// Wrapper function for string equality
-#[verifier::external_body]
-fn str_equal(s1: &str, s2: &str) -> (result: bool)
-    ensures result == (s1 == s2)
-{
-    s1 == s2
-}
-
-#[derive(PartialEq, Eq)]
-pub enum SwapError {
-    BadArgs,
-    MvFailed,
-}
 
 pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<(), SwapError>)
     ensures

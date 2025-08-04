@@ -1,8 +1,13 @@
 use vstd::prelude::*;
 use crate::lib::*;
-use crate::swap1::SwapError;
 
 verus! {
+
+#[derive(PartialEq, Eq)]
+pub enum SwapError {
+    BadArgs,
+    MvFailed,
+}
 
 pub open spec fn swap_is_correct(
     file1: &str, 
