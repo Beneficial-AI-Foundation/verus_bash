@@ -11,8 +11,8 @@ pub struct FileSystem;
 pub uninterp spec fn get_file(fs: &FileSystem, filename: &str) -> Option<Vec<u8>>;
 
 pub open spec fn unchanged_except(old_fs: &FileSystem, new_fs: &FileSystem, changed_files: Seq<&str>) -> bool {
-    forall|k: &str| 
-        (get_file(new_fs, k) != get_file(old_fs, k)) ==> 
+    forall|k: &str|
+        (get_file(new_fs, k) != get_file(old_fs, k)) ==>
         changed_files.contains(k)
 }
 

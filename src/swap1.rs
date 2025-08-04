@@ -1,5 +1,5 @@
-use vstd::prelude::*;
 use crate::lib::*;
+use vstd::prelude::*;
 
 verus! {
 
@@ -25,7 +25,8 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
                     get_file(fs, file1) == get_file(&old(fs), file2) &&
                     get_file(fs, file2) == get_file(&old(fs), file1) &&
                     unchanged_except(&old(fs), fs, seq![file1, file2, "tmp_file"])
-                )             },
+                )
+            },
             Err(SwapError::BadArgs) => {
                 *fs == old(fs)
             },
@@ -38,10 +39,10 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
     if str_equal(file1, file2) || str_equal(file1, "tmp_file") || str_equal(file2, "tmp_file") {
         return Err(SwapError::BadArgs);
     }
-    
+
     let file1_exists = test(file1, fs);
     let file2_exists = test(file2, fs);
-    
+
     if file1_exists && file2_exists {
         // Both files exist - swap them using a temporary name
         mv(file1, "tmp_file", fs).map_err(|x| SwapError::MvFailed)?;
