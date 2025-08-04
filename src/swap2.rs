@@ -19,10 +19,11 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
         return Err(SwapError::BadArgs)
     }
     
-    cp(file1, "tmp_file", fs).map_err(|x| SwapError::OperationFailed)?;
-    cp(file2, file1, fs).map_err(|x| SwapError::OperationFailed)?;
-    cp("tmp_file", file2, fs).map_err(|x| SwapError::OperationFailed)?;
-    rm("tmp_file", fs).map_err(|x| SwapError::OperationFailed)
+    cp(file1, "tmp_file", fs)?;
+    cp(file2, file1, fs)?;
+    cp("tmp_file", file2, fs)?;
+    rm("tmp_file", fs)?;
+    Ok(())
 }
 
 }

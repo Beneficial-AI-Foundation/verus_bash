@@ -9,6 +9,16 @@ pub enum SwapError {
     OperationFailed,
 }
 
+} // verus!
+
+impl From<OperationFailed> for SwapError {
+    fn from(_: OperationFailed) -> Self {
+        SwapError::OperationFailed
+    }
+}
+
+verus! {
+
 pub open spec fn swap_is_correct(
     file1: &str, 
     file2: &str, 
