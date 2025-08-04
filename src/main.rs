@@ -39,12 +39,11 @@ fn test(filename: &str, fs: &HashMap<String, Vec<u8>>) -> (result: bool)
 
 fn main() {
     let mut fs = std::collections::HashMap::new();
-    fs.insert("foo".to_string(), vec![1,2]);
     let f = "foo".to_string();
     
     if test(&f, &fs) {
         assert(get_file(&fs, f).is_some());
-        mv(&f.clone(), "bar", &mut fs);
+        mv(&f, "bar", &mut fs);
     }
 }
 
