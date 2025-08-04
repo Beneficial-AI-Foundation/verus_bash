@@ -30,6 +30,8 @@ match mv("tmp_file", file2, fs) {
 }
 ```
 
+Here `fs` represents the file system.
+
 Verus (via `cargo verus verify`) gives us an error, since we haven't checked that `file1` exists before we moved it:
 
 ```rust
