@@ -5,6 +5,13 @@ use vstd::prelude::*;
 
 verus! {
 
+impl From<OperationFailed> for SwapError {
+    fn from(_x: OperationFailed) -> (res: Self)
+        ensures res == SwapError::OperationFailed
+    {
+        SwapError::OperationFailed
+    }
+}
 
 pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), SwapError>)
     ensures
@@ -25,19 +32,17 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     if ! (file1_exists && file2_exists) {
         return Err(SwapError::BadArgs)
     }
-    // The match statements are a little verbose, but verus finds it harder
-    // to prove when `?` is used
     match mv(file1, "tmp_file", fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     match mv(file2, file1, fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     match mv("tmp_file", file2, fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     Ok(())
 }
