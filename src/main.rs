@@ -26,17 +26,7 @@ fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> 
             }
         }
 {
-    // Perform the actual filesystem operation
-    match std::fs::rename(&old_name, &new_name) {
-        Ok(()) => {
-            // Update our model to reflect the successful move
-            Ok(())
-        },
-        Err(_) => {
-            // Filesystem operation failed, model remains unchanged
-            Err(MvError)
-        }
-    }
+    std::fs::rename(&old_name, &new_name).map_err(|_| MvError)
 }
 
 } // verus!
