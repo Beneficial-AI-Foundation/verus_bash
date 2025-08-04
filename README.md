@@ -140,6 +140,7 @@ The `swap` function is executable and can be run with `cargo run`
   - A malicious user could create a different `FileSystem` object inside the object and apply operations to it, and the verifier won't notice these operations
   - A malicious user could just call `std::fs::remove_file` directly
   - We could write a macro/a linter script that goes through the function and checks that only approved functions are called
+  - We want to give the user enough flexibility to prove that their function is correct, but not enough flexibility to call untrusted Rust code
 - The `FileSystem` object has no understanding of directories, permissions, paths, and other basic Unix facts
   - We'd have to tell it how a POSIX file system should work
 - Only the easiest shell functions are specified right now
