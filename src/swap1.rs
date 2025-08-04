@@ -21,17 +21,11 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
     ensures
         match result {
             Ok(()) => {
-                // If both files existed before, they are swapped
-                (get_file(&old(fs), file1).is_some() && get_file(&old(fs), file2).is_some()) ==> (
+                (
                     get_file(fs, file1) == get_file(&old(fs), file2) &&
                     get_file(fs, file2) == get_file(&old(fs), file1) &&
                     unchanged_except(&old(fs), fs, seq![file1, file2, "tmp_file"])
-                ) &&
-                // Otherwise, filesystem remains unchanged
-                (get_file(&old(fs), file1).is_none() || get_file(&old(fs), file2).is_none()) ==> (
-                    *fs == old(fs)
-                )
-            },
+                )             },
             Err(SwapError::BadArgs) => {
                 *fs == old(fs)
             },
@@ -59,9 +53,11 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
             Ok(()) => {},
             Err(MvFailed) => return Err(SwapError::MvFailed),
         }
+        return Ok(());
     }
-    // Otherwise, do nothing
-    Ok(())
+    else {
+        return Err(SwapError::BadArgs);
+    }
 }
 
 }
