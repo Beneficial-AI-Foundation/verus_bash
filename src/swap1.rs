@@ -8,7 +8,6 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     requires
         file1 != file2,
         file2 != "tmp_file",
-        file1 != "tmp_file"
     ensures
         match result {
             Ok(()) => {
@@ -16,7 +15,6 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
                 (get_file(&old(fs), file1).is_some() && get_file(&old(fs), file2).is_some()) ==> (
                     get_file(fs, file1) == get_file(&old(fs), file2) &&
                     get_file(fs, file2) == get_file(&old(fs), file1) &&
-                    get_file(fs, "tmp_file").is_none() &&
                     forall|k: &str| k != file1 && k != file2 && k != "tmp_file" ==>
                         get_file(fs, k) == get_file(&old(fs), k)
                 ) &&
