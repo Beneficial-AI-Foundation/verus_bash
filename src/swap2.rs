@@ -22,19 +22,19 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     
     match cp(file1, "tmp_file", fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     match cp(file2, file1, fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     match cp("tmp_file", file2, fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     match rm("tmp_file", fs) {
         Ok(()) => {},
-        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+        Err(e) => return Err(From::from(e)),
     }
     Ok(())
 }

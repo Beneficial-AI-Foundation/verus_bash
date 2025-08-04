@@ -5,13 +5,6 @@ use vstd::prelude::*;
 
 verus! {
 
-impl From<OperationFailed> for SwapError {
-    fn from(_x: OperationFailed) -> (res: Self)
-        ensures res == SwapError::OperationFailed
-    {
-        SwapError::OperationFailed
-    }
-}
 
 pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), SwapError>)
     ensures

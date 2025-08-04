@@ -10,6 +10,14 @@ pub enum SwapError {
     OperationFailed,
 }
 
+impl From<OperationFailed> for SwapError {
+    fn from(_x: OperationFailed) -> (res: Self)
+        ensures res == SwapError::OperationFailed
+    {
+        SwapError::OperationFailed
+    }
+}
+
 pub open spec fn swap_is_correct(
     file1: &str, 
     file2: &str, 
