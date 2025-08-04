@@ -2,6 +2,7 @@ use clap::Parser;
 
 mod lib;
 mod swap1;
+mod swap2;
 mod swap_spec;
 use lib::FileSystem;
 
@@ -25,8 +26,8 @@ fn main() {
             eprintln!("Error: Invalid arguments. Files cannot be the same or named 'tmp_file'");
             std::process::exit(1);
         }
-        Err(swap_spec::SwapError::MvFailed) => {
-            eprintln!("Error: Failed to move files");
+        Err(swap_spec::SwapError::OperationFailed) => {
+            eprintln!("Error: Operation failed");
             std::process::exit(1);
         }
     }

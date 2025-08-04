@@ -6,7 +6,7 @@ verus! {
 #[derive(PartialEq, Eq)]
 pub enum SwapError {
     BadArgs,
-    MvFailed,
+    OperationFailed,
 }
 
 pub open spec fn swap_is_correct(
@@ -21,13 +21,14 @@ pub open spec fn swap_is_correct(
             (
                 get_file(fs, file1) == get_file(old_fs, file2) &&
                 get_file(fs, file2) == get_file(old_fs, file1) &&
+                get_file(fs, "tmp_file").is_none() &&
                 unchanged_except(old_fs, fs, seq![file1, file2, "tmp_file"])
             )
         },
         Err(SwapError::BadArgs) => {
             *fs == *old_fs
         },
-        Err(SwapError::MvFailed) => {
+        Err(SwapError::OperationFailed) => {
             unchanged_except(old_fs, fs, seq![file1, file2, "tmp_file"])
         }
     }

@@ -4,7 +4,7 @@ verus! {
 
 #[derive(PartialEq, Eq)]
 #[derive(Debug)]
-pub struct MvFailed;
+pub struct OperationFailed;
 
 pub struct FileSystem;
 
@@ -24,7 +24,7 @@ pub fn str_equal(s1: &str, s2: &str) -> (result: bool)
 }
 
 #[verifier::external_body]
-pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Result<(), MvFailed>)
+pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Result<(), OperationFailed>)
     requires get_file(&old(fs), old_name).is_some()
     ensures
         match result {
@@ -39,12 +39,49 @@ pub fn mv(old_name: &str, new_name: &str, fs: &mut FileSystem) -> (result: Resul
                         get_file(fs, k) == get_file(&old(fs), k)
                 }
             },
-            Err(MvFailed) => {
+            Err(OperationFailed) => {
                 *fs == old(fs)
             }
         }
 {
-    std::fs::rename(&old_name, &new_name).map_err(|_| MvFailed)
+    std::fs::rename(&old_name, &new_name).map_err(|_| OperationFailed)
+}
+
+#[verifier::external_body]
+pub fn cp(src: &str, dst: &str, fs: &mut FileSystem) -> (result: Result<(), OperationFailed>)
+    requires get_file(&old(fs), src).is_some()
+    ensures
+        match result {
+            Ok(()) => {
+                get_file(fs, dst) == get_file(&old(fs), src) &&
+                get_file(fs, src) == get_file(&old(fs), src) &&
+                forall|k: &str| k != dst ==>
+                    get_file(fs, k) == get_file(&old(fs), k)
+            },
+            Err(OperationFailed) => {
+                *fs == old(fs)
+            }
+        }
+{
+    std::fs::copy(src, dst).map(|_| ()).map_err(|_| OperationFailed)
+}
+
+#[verifier::external_body]
+pub fn rm(filename: &str, fs: &mut FileSystem) -> (result: Result<(), OperationFailed>)
+    requires get_file(&old(fs), filename).is_some()
+    ensures
+        match result {
+            Ok(()) => {
+                get_file(fs, filename).is_none() &&
+                forall|k: &str| k != filename ==>
+                    get_file(fs, k) == get_file(&old(fs), k)
+            },
+            Err(OperationFailed) => {
+                *fs == old(fs)
+            }
+        }
+{
+    std::fs::remove_file(filename).map_err(|_| OperationFailed)
 }
 
 #[verifier::external_body]

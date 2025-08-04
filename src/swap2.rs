@@ -4,11 +4,11 @@ use vstd::prelude::*;
 
 verus! {
 
-
 pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<(), SwapError>)
     ensures
         swap_is_correct(file1, file2, &old(fs), fs, result)
 {
+    // Check for bad arguments
     if str_equal(file1, file2) || str_equal(file1, "tmp_file") || str_equal(file2, "tmp_file") {
         return Err(SwapError::BadArgs);
     }
@@ -19,18 +19,37 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
     if ! (file1_exists && file2_exists) {
         return Err(SwapError::BadArgs)
     }
-    match mv(file1, "tmp_file", fs) {
+    
+    // Copy file1 to tmp_file, then remove file1
+    match cp(file1, "tmp_file", fs) {
         Ok(()) => {},
         Err(OperationFailed) => return Err(SwapError::OperationFailed),
     }
-    match mv(file2, file1, fs) {
+    match rm(file1, fs) {
         Ok(()) => {},
         Err(OperationFailed) => return Err(SwapError::OperationFailed),
     }
-    match mv("tmp_file", file2, fs) {
+    
+    // Copy file2 to file1, then remove file2
+    match cp(file2, file1, fs) {
         Ok(()) => {},
         Err(OperationFailed) => return Err(SwapError::OperationFailed),
     }
+    match rm(file2, fs) {
+        Ok(()) => {},
+        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+    }
+    
+    // Copy tmp_file to file2, then remove tmp_file
+    match cp("tmp_file", file2, fs) {
+        Ok(()) => {},
+        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+    }
+    match rm("tmp_file", fs) {
+        Ok(()) => {},
+        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+    }
+    
     Ok(())
 }
 
