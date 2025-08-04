@@ -45,9 +45,9 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     
     if file1_exists && file2_exists {
         // Both files exist - swap them using a temporary name
-        mv(file1, "tmp_file", fs).map_err(|_| SwapError::MvFailed)?;
-        mv(file2, file1, fs).map_err(|_| SwapError::MvFailed)?;
-        mv("tmp_file", file2, fs).map_err(|_| SwapError::MvFailed)?;
+        mv(file1, "tmp_file", fs).map_err(|x| SwapError::MvFailed)?;
+        mv(file2, file1, fs).map_err(|x| SwapError::MvFailed)?;
+        mv("tmp_file", file2, fs).map_err(|x| SwapError::MvFailed)?;
     }
     // Otherwise, do nothing
     Ok(())
