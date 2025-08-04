@@ -35,7 +35,6 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
             }
         }
 {
-    // Check for bad arguments
     if str_equal(file1, file2) || str_equal(file1, "tmp_file") || str_equal(file2, "tmp_file") {
         return Err(SwapError::BadArgs);
     }
