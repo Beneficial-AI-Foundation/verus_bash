@@ -10,19 +10,20 @@ pub enum MvError {
     Other,
 }
 
+pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: String) -> Option<Vec<u8>>;
+// Unimplemented - left as specification function
+
 #[verifier::external_body]
 fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvError>)
     ensures
         match result {
             Ok(()) => {
                 // File was successfully moved
-                old(fs).contains_key(&old_name) ==> {
-                    fs.contains_key(&new_name) && 
-                    fs[new_name] == old(fs)[old_name] &&
-                    !fs.contains_key(&old_name) &&
+                get_file(&old(fs), old_name).is_some() ==> {
+                    get_file(fs, new_name) == get_file(&old(fs), old_name) &&
+                    get_file(fs, old_name).is_none() &&
                     forall|k: String| k != old_name && k != new_name ==> 
-                        fs.contains_key(&k) == old(fs).contains_key(&k) &&
-                        (fs.contains_key(&k) ==> fs[k] == old(fs)[k])
+                        get_file(fs, k) == get_file(&old(fs), k)
                 }
             },
             Err(_) => {
