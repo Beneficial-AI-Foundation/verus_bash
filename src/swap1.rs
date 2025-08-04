@@ -4,6 +4,14 @@ use crate::lib::*;
 
 verus! {
 
+// Wrapper function for string equality
+#[verifier::external_body]
+fn str_equal(s1: &str, s2: &str) -> (result: bool)
+    ensures result == (s1 == s2)
+{
+    s1 == s2
+}
+
 #[derive(PartialEq, Eq)]
 pub enum SwapError {
     BadArgs,
@@ -36,7 +44,7 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
         }
 {
     // Check for bad arguments
-    if file1 == file2 || file1 == "tmp_file" || file2 == "tmp_file" {
+    if str_equal(file1, file2) || str_equal(file1, "tmp_file") || str_equal(file2, "tmp_file") {
         return Err(SwapError::BadArgs);
     }
     
