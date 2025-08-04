@@ -17,6 +17,11 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
     let file1_exists = test(file1, fs);
     let file2_exists = test(file2, fs);
 
+    // Uncomment this and verification will fail
+    // if ! str_equal("important_file", file1) && ! str_equal("important_file", file2) && test("important_file", fs) {
+    //     rm("important_file", fs)?;
+    // }
+
     if ! (file1_exists && file2_exists) {
         return Err(SwapError::BadArgs)
     }
