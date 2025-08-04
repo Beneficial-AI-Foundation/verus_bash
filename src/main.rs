@@ -18,5 +18,8 @@ fn main() {
     let args = Args::parse();
     let mut fs = HashMap::new();
     
-    swap1::swap(&args.file1, &args.file2, &mut fs);
+    match swap1::swap(&args.file1, &args.file2, &mut fs) {
+        Ok(()) => println!("Swap completed successfully"),
+        Err(_) => println!("Swap failed"),
+    }
 }

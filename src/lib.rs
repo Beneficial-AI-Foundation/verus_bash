@@ -4,6 +4,7 @@ use vstd::prelude::*;
 verus! {
 
 #[derive(PartialEq, Eq)]
+#[derive(Debug)]
 pub struct MvError;
 
 pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: &str) -> Option<Vec<u8>>;
