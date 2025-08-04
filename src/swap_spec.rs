@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use vstd::prelude::*;
 use crate::lib::*;
 
@@ -22,8 +23,8 @@ verus! {
 pub open spec fn swap_is_correct(
     file1: &str, 
     file2: &str, 
-    old_fs: &FileSystem, 
-    fs: &FileSystem, 
+    old_fs: &HashMap<String, Vec<u8>>, 
+    fs: &HashMap<String, Vec<u8>>, 
     result: Result<(), SwapError>
 ) -> bool {
     match result {

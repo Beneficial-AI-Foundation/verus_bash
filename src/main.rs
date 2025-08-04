@@ -1,10 +1,10 @@
+use std::collections::HashMap;
 use clap::Parser;
 
 mod lib;
 mod swap1;
 mod swap2;
 mod swap_spec;
-use lib::FileSystem;
 
 #[derive(Parser)]
 #[command(name = "verus_bash")]
@@ -18,7 +18,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let mut fs = FileSystem;
+    let mut fs = HashMap::new();
 
     match swap1::swap(&args.file1, &args.file2, &mut fs) {
         Ok(()) => println!("Swap completed successfully"),

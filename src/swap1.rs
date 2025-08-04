@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::lib::*;
 use crate::swap_spec::*;
 use vstd::prelude::*;
@@ -5,7 +6,7 @@ use vstd::prelude::*;
 verus! {
 
 
-pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<(), SwapError>)
+pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), SwapError>)
     ensures
         swap_is_correct(file1, file2, &old(fs), fs, result)
 {
@@ -19,9 +20,18 @@ pub fn swap(file1: &str, file2: &str, fs: &mut FileSystem) -> (result: Result<()
     if ! (file1_exists && file2_exists) {
         return Err(SwapError::BadArgs)
     }
-    mv(file1, "tmp_file", fs)?;
-    mv(file2, file1, fs)?;
-    mv("tmp_file", file2, fs)?;
+    match mv(file1, "tmp_file", fs) {
+        Ok(()) => {},
+        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+    }
+    match mv(file2, file1, fs) {
+        Ok(()) => {},
+        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+    }
+    match mv("tmp_file", file2, fs) {
+        Ok(()) => {},
+        Err(OperationFailed) => return Err(SwapError::OperationFailed),
+    }
     Ok(())
 }
 
