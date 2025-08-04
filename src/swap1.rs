@@ -26,7 +26,8 @@ pub fn swap(file1: &str, file2: &str, fs: &mut HashMap<String, Vec<u8>>) -> (res
                 )
             },
             Err(MvError) => {
-                *fs == old(fs)
+                    forall|k: &str| k != file1 && k != file2 && k != "temp_swap_file" ==>
+                        get_file(fs, k) == get_file(&old(fs), k)
             }
         }
 {
