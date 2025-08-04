@@ -11,16 +11,14 @@ pub uninterp spec fn get_file(fs: &HashMap<String, Vec<u8>>, filename: String) -
 
 #[verifier::external_body]
 fn mv(old_name: String, new_name: String, fs: &mut HashMap<String, Vec<u8>>) -> (result: Result<(), MvError>)
+    requires get_file(&old(fs), old_name).is_some()
     ensures
         match result {
             Ok(()) => {
-                // File was successfully moved
-                get_file(&old(fs), old_name).is_some() ==> {
                     get_file(fs, new_name) == get_file(&old(fs), old_name) &&
                     get_file(fs, old_name).is_none() &&
                     forall|k: String| k != old_name && k != new_name ==> 
                         get_file(fs, k) == get_file(&old(fs), k)
-                }
             },
             Err(_) => {
                 // On error, filesystem model remains unchanged
