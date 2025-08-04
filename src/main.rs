@@ -41,7 +41,6 @@ fn main() {
     let mut fs = std::collections::HashMap::new();
     
     if test("foo", &fs) {
-        assert(get_file(&fs, "foo").is_some());
         mv("foo", "bar", &mut fs);
     }
 }
